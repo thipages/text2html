@@ -18,7 +18,7 @@ const prep=(input,d1,d2)=> {
     all=all.sort((a,b)=>a.index===b.index?0:a.index<b.index?-1:1);
     return {matches:all,offset:0,endLength:2}
 };
-export const marker=(input, def=[],oChar='|',cChar='^')=> {
+export const html2text=(input, def=[], oChar='|', cChar='^')=> {
     let c=0,
         markers=[],
         {matches,offset, endLength}=prep(input,oChar,cChar),

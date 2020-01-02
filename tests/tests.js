@@ -1,4 +1,4 @@
-import {marker} from "../index.js";
+import {html2text} from "../index.js";
 const format=[
     'A',{style:"color:red"},
     'B',{style:"color:yellow"},
@@ -19,7 +19,7 @@ let excepted= [
 
 sources.forEach(
     (v,i)=>{
-        let r=marker(sources[i],format);
+        let r=html2text(sources[i],format);
         if (r.output===excepted[i]) {
             console.log("ok");
         } else {
