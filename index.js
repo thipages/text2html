@@ -52,7 +52,7 @@ export const text2html=(input, def=[], oChar='|', cChar='^')=> {
                                 .splice(bul+1,output.length-2)
                                 .join('').replace(/^\n|\n$/g, '')
                                 .split("\n")
-                                .map (l=>`<li>${l}</li>`).join("");
+                                .map (l=>`<li>${l.replace(/^\s+/g, '')}</li>`).join("");
                         } else {
                             warnings.push();
                         }
