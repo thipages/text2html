@@ -18,7 +18,7 @@ through a text file
 ```
 I am |oops^stuck^|
 ```
-associated with a JavaScript map
+associated with a JavaScript definition array [key1,value1, key2, value2, ..]
 ```javascript
 const def=['oops',{style:'color:blue;'}];
 const html=text2html(textFile,def);
