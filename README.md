@@ -1,5 +1,5 @@
 # text2html
-flow text formatter
+flow text formatter _key/text/
 
 
 ## What it does
