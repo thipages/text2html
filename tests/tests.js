@@ -24,9 +24,9 @@ let sources=[
     [
         `start\\A{Here I am} and \\B{Here I am stuck}end`,
         `start\n\\begin(A)\nHere I am\n\\begin(B)\nembedded\n\\end\n\\end\nend`,
-        `start\n\\begin(list)\nitem1\nitem2\n\\end\nend`/*,
-        `I am /oops_stuck_/`,
-        `/list_   item1\nitem2   _/`*/
+        `start\n\\begin(list)\nitem1\nitem2\n\\end\nend`,
+        `I am \\oops{stuck}`,
+        `\\begin(list)\n   item1\nitem2   \n\\end`
     ]
 ];
 
