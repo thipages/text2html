@@ -5,14 +5,17 @@ const arrayToMap=(a)=>a.reduce((acc,v,i)=>{
 const htmlMap=(a)=> {
     let map=arrayToMap(a);
     for (let temp of map.entries()) {
-        map.set (temp[0],
-            {
-                tag:temp[1].tag?temp[1].tag:'span',
-                attr:Object.keys(temp[1]).reduce ((acc,v)=>{
-                    if (v!=='tag') acc.push(`${v}="${temp[1][v]}"`);
-                    return acc;
-                },[]).join(' ')
-            });
+        let t=temp[1].tag;
+        if (t!=='script') {
+            map.set(temp[0],
+                {
+                    tag: t ? t : 'span',
+                    attr: Object.keys(temp[1]).reduce((acc, v) => {
+                        if (v !== 'tag') acc.push(`${v}="${temp[1][v]}"`);
+                        return acc;
+                    }, []).join(' ')
+                });
+        }
     }
     return map;
 };
