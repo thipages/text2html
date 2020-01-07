@@ -1,5 +1,5 @@
 # text2html
-flow text formatter
+Text formatter
 
 
 ## What it does
