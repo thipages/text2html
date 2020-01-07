@@ -88,5 +88,5 @@ export const text2html=(input, def=[],transformer={})=> {
         final.push(output.substr(index + 1));
         output=final.join('');
     }
-    return {output,all: nested, warnings}
+    return {output, warnings}
 };
