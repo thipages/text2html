@@ -6,7 +6,7 @@ const htmlMap=(a)=> {
     let map=arrayToMap(a);
     for (let temp of map.entries()) {
         let t=temp[1].tag;
-        if (t!=='script') {
+        if (['script','begin','end'].indexOf(t)===-1) {
             map.set(temp[0],
                 {
                     tag: t ? t : 'span',
