@@ -16,7 +16,10 @@ text2html("\\begin(list)\n   item1\nitem2   \n\\end,{['list',{tag:'ul'}).output 
 
 through a text file
 ```
-I am \oops{stuck}
+\begin(ul)
+I am
+    \oops{stuck}
+\end
 ```
 associated with a JavaScript definition array [key1,value1, key2, value2, ..]
 ```javascript
