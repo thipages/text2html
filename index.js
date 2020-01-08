@@ -1,3 +1,4 @@
+// todo replace def array by def object array only with key having _ prop
 const arrayToMap=(a)=>a.reduce((acc,v,i)=>{
         if ((i+1)%2===0) acc.set(a[i-1],v);
         return acc;
