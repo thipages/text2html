@@ -12,18 +12,18 @@ text2html("I am \\oops{stuck},{['oops',{style:'color:blue;'}).output ==='I am <s
 text2html("\\begin(list)\n   item1\nitem2   \n\\end,{['list',{tag:'ul'}).output ==='<ul><li>item1</li><li>item2   </li></ul>';
 ```
 
-## Usage
+## Basic Usage
 
 through a text file
 ```
-\begin(ul)
+\begin(list)
 I am
     \oops{stuck}
 \end
 ```
 associated with a JavaScript definition array [key1,value1, key2, value2, ..]
 ```javascript
-const def=['oops',{style:'color:blue;'}];
+const def=['oops',{style:'color:blue;'},'list',{tag:'ul'}];
 // returns <ul><li>I am</li><li><span style="color:blue;">stuck</span></li></ul>
 const html=text2html(textFileAsString,def).output;
 ```
