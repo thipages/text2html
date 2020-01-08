@@ -8,7 +8,7 @@ Text formatter
 // Latex like inline formatting
 text2html("I am \\oops{stuck},{['oops',{style:'color:blue;'}).output ==='I am <span style="color:blue;">stuck</span>';
 
-// Latex like block formatting where items are separated by newlines, removing any leading spaces
+// Latex like block formatting where items are separated by newlines. Any item leading spaces are removed
 text2html("\\begin(list)\n   item1\nitem2   \n\\end,{['list',{tag:'ul'}).output ==='<ul><li>item1</li><li>item2   </li></ul>';
 ```
 
