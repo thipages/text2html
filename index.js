@@ -26,7 +26,7 @@ const begin=/^\\(begin)\(([a-zA-Z][A-Za-z0-9]*)\)$/gm;
 const end=/^\\(end)$/gm;
 const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){([^\\]*)}/g;
 const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
-const defaultTags=['ul','i','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
+const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
 const ul=(a)=> a.join('').split("\n").map(
             v=>wrapper('li',v.replace(/^\s*/,''))
         ).join('')+cTagger('ul');
