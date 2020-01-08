@@ -21,7 +21,7 @@ const htmlMap=(a)=> {
 };
 const oTagger=(t,a)=>`<${t}${a?' '+a:''}>`;
 const cTagger=(t)=>`</${t}>`;
-const wrapper=(tag,text,attr="")=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
+const wrapper=(tag,text,attr)=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
 const begin=/^\\(begin)\(([a-zA-Z][A-Za-z0-9]*)\)$/gm;
 const end=/^\\(end)$/gm;
 const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){([^\\]*)}/g;
@@ -31,7 +31,7 @@ const ul=(a)=> a.join('').split("\n").map(
             v=>wrapper('li',v.replace(/^\s*/,''))
         ).join('')+cTagger('ul');
 export const text2html=(input, def=[],transformer={})=> {
-    let map=htmlMap(def);
+    let map=htmlMap(def),warnings=[];
     defaultTags.forEach (t=>{
         if (!map.has(t)) map.set(t,{tag:t,attr:""});
     });
@@ -45,11 +45,12 @@ export const text2html=(input, def=[],transformer={})=> {
             let t=map.get(key);
             return  wrapper(t.tag,text,t.attr);
         } else {
-            return 'ERR';
+            warnings.push();
+            return wrapper('unknown',text);
         }
     });
     // resolve nested pattern
-    let final=[],index=0, buffer=[], warnings=[];
+    let final=[], buffer=[],index=0;
     const nested=[...Array.from(output.matchAll(begin)), ...Array.from(output.matchAll(end))]
         .sort((a,b)=>a.index===b.index?0:a.index<b.index?-1:1);
     if (nested.length!==0) {
@@ -77,7 +78,7 @@ export const text2html=(input, def=[],transformer={})=> {
                         let t=map.get(v[2]);
                         final.push(oTagger(t.tag,t.attr));
                     } else {
-                        final.push(oTagger("span"));
+                        final.push(oTagger("unknown"));
                         warnings.push();
                     }
                     buffer.push([final.length - 1, v[2]]);
