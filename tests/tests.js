@@ -1,9 +1,17 @@
 import {text2html} from "../index.js";
+
+const samp=fetch ("sample")
+    .then(response => response.text()
+    .then(data => {
+        test(data.split("\r\n**"))
+    }));
+
 const format=[
     'A',{style:"color:red;"},
     'B',{style:"color:yellow;"},
     'oops',{style:"color:blue;"},
     'list',{tag:'ul'},
+    'hr', {tag:'hr'}
 ];
 let testSet=[
     'basic non nested',
@@ -16,28 +24,55 @@ let testSet=[
     `start\\em{Here I am} and \\h1{Here I am stuck}end`,
     `start<em>Here I am</em> and <h1>Here I am stuck</h1>end`,
     'nested span',
-    `start\n\\begin(A)\nHere I am\n\\begin(B)\nembedded\n\\end\n\\end\nend`,
+    `start\n\\\\A\nHere I am\n\\\\B\nembedded\n\\\\\n\\\\\nend`,
     `start<span style="color:red;">Here I am<span style="color:yellow;">embedded</span></span>end`,
     'simple list',
-    `start\n\\begin(list)\nitem1\nitem2\n\\end\nend`,
+    `start\n\\\\list\nitem1\nitem2\n\\\\\nend`,
     `start<ul><li>item1</li><li>item2</li></ul>end`,
     'list with leading/trailing spaces li',
-    `\\begin(list)\n   item1\nitem2   \n\\end`,
-    `<ul><li>item1</li><li>item2   </li></ul>`
+    `\\\\list\n   item1\nitem2   \n\\\\`,
+    `<ul><li>item1</li><li>item2   </li></ul>`,
+    'self-contained simple',
+    `\\hr/`,
+    `<hr />`,
 ];
 
-testSet.forEach(
-    (v,i)=>{
-        if (i%3===0) {
-            let r = text2html(testSet[i+1], format);
-            if (r.output === testSet[i+2]) {
-                console.log("ok",testSet[i]);
-            } else {
-                console.log("nok",testSet[i], r.output);
+const log=(r,i,pre)=> {
+    if (r.output === testSet[i + 2]) {
+        console.log("ok", pre,r.output,r.output.length);
+    } else {
+        console.log("nok",pre, r.output,r.output.length);
+    }
+};
+const test=(data)=>  {
+    let si=0;
+    let valid=true;
+    let comparison="";
+    testSet.forEach(
+        (v,i)=>{
+            comparison="";
+            if (i%3===0) {
+                let r1 = text2html(testSet[i+1], format);
+                log(r1,i,"string");
+                let r2 = text2html(data[si], format);
+                log(r2,i,"file");
+                let rs1=r1.output.split("");
+                r2.output.split('').forEach(
+                    (v,i)=>{
+                        if (valid && v===rs1[i]){
+                            comparison+=v;
+                        } else {
+                            valid=false;
+                        }
+                    }
+                );
+                si++;
+                if (!valid) console.log("identical part:"+comparison+"\n");
             }
         }
-    }
-);
+    );
+};
+
 
 
 

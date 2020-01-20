@@ -1,0 +1,28 @@
+I am \oops{stuck}
+**
+start\A{Here I am} and \B{Here I am stuck}end
+**
+start\em{Here I am} and \h1{Here I am stuck}end
+**
+start
+\\A
+Here I am
+\\B
+embedded
+\\
+\\
+end
+**
+start
+\\list
+item1
+item2
+\\
+end
+**
+\\list
+   item1
+item2
+\\
+**
+\hr/
