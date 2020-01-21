@@ -1,27 +1,8 @@
-// todo replace def array by def object array only with key having _ prop
-/*
-\key{text} 			wraps text						\{ \} \\key{text}
-
-\key/				adds any content			    \\key/
-
-\key\
-content			    wraps content					\\key/
-\\
-
-\_key[:type] 		delimiters (typed) content		\\_key[:type]
-
-Rules
-Empty lines are removed
- */
-const arrayToMap=(a)=>a.reduce((acc,v,i)=>{
-        if ((i+1)%2===0) acc.set(a[i-1],v);
-        return acc;
-    },new Map());
-const htmlMap=(a)=> {
-    let map=arrayToMap(a);
-    for (let temp of map.entries()) {
+const htmlMap=(o)=> {
+    let map=new Map();
+    for (let temp of Object.entries(o)) {
         let t=temp[1].tag;
-        if (['script','begin','end'].indexOf(t)===-1) {
+        if (['script'].indexOf(t)===-1) {
             map.set(temp[0],
                 {
                     tag: t ? t : 'span',
@@ -44,9 +25,9 @@ const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){([^\\]*)}/g;
 const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
 const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
 const ul=(a)=> a.join('').split("\n").map(
-            v=>wrapper('li',v.replace(/^\s*/,''))
-        ).join('')+cTagger('ul');
-export const text2html=(input, def=[],transformer={})=> {
+    v=>wrapper('li',v.replace(/^\s*/,''))
+).join('')+cTagger('ul');
+export const text2html=(def={})=>(input,transformer={})=> {
     let map=htmlMap(def),warnings=[];
     defaultTags.forEach (t=>{
         if (!map.has(t)) map.set(t,{tag:t,attr:""});
@@ -98,7 +79,7 @@ export const text2html=(input, def=[],transformer={})=> {
                                 ? transformer[tag](final.splice(nItem[0]+1, final.length))
                                 : cTagger(tag)
                         );
-                     } else {
+                    } else {
                         warnings.push();
                     }
                 } else  {

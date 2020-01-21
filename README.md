@@ -1,31 +1,29 @@
 # text2html
-Text formatter
+Text to HTML formatter and more ...
 
 
-## What it does
-
+## Basic usage
 ```javascript
-// Latex like inline formatting
+const format = {
+    blue:{tag:'span',style:'color:blue;'}
+}
 // returns I am <span style="color:blue;">stuck</span>
-text2html("I am \\oops{stuck},{['oops',{style:'color:blue;'}).output;
+text2html(format)("I am \\blue{stuck}").output;
+```
+## Features
+| #   | pattern       | Feature               |
+| --- | ------------- |-----------------------|
+|  1  | \key{text}    | wraps text            |
+|  2  | \key\         | wraps content (start) |
+|  3  | \\\           | wraps content (end)   |
+|  4  | \key/         | adds  content         |
+|  5  | \\_key[:type] | delimiters content*   |
 
-// Latex like block formatting where items are separated by newlines. Any item leading spaces are removed
-// returns <ul><li>item1</li><li>item2   </li></ul>
-text2html("\\begin(list)\n   item1\nitem2   \n\\end,{['list',{tag:'ul'}).output;
-```
 
-## Basic Usage
+\* not yet implemented
 
-through a text file
-```
-\begin(list)
-I am
-    \oops{stuck}
-\end
-```
-associated with a JavaScript definition array [key1,value1, key2, value2, ..]
-```javascript
-const def=['oops',{style:'color:blue;'},'list',{tag:'ul'}];
-// returns <ul><li>I am</li><li><span style="color:blue;">stuck</span></li></ul>
-const html=text2html(textFileAsString,def).output;
-```
+## Rules
+* Empty lines are removed
+* Pattern #1 can be inline, all others are on a separate line
+* span is the default tag
+* ul key/tag wraps new lines content

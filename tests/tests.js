@@ -1,18 +1,17 @@
 import {text2html} from "../index.js";
-
-const samp=fetch ("sample")
+const samp=fetch ("asFile")
     .then(response => response.text()
     .then(data => {
         test(data.split("\r\n**"))
     }));
 
-const format=[
-    'A',{style:"color:red;"},
-    'B',{style:"color:yellow;"},
-    'oops',{style:"color:blue;"},
-    'list',{tag:'ul'},
-    'hr', {tag:'hr'}
-];
+const format={
+    A:{style:"color:red;"},
+    B:{style:"color:yellow;"},
+    oops:{style:"color:blue;"},
+    list:{tag:'ul'},
+    hr: {tag:'hr'}
+};
 let testSet=[
     'basic non nested',
     `I am \\oops{stuck}`,
@@ -45,16 +44,16 @@ const log=(r,i,pre)=> {
     }
 };
 const test=(data)=>  {
-    let si=0;
+    let count=0;
     let valid=true;
     let comparison="";
     testSet.forEach(
         (v,i)=>{
             comparison="";
             if (i%3===0) {
-                let r1 = text2html(testSet[i+1], format);
+                let r1 = text2html(format)(testSet[i+1]);
                 log(r1,i,"string");
-                let r2 = text2html(data[si], format);
+                let r2 = text2html(format)(data[count]);
                 log(r2,i,"file");
                 let rs1=r1.output.split("");
                 r2.output.split('').forEach(
@@ -66,7 +65,7 @@ const test=(data)=>  {
                         }
                     }
                 );
-                si++;
+                count++;
                 if (!valid) console.log("identical part:"+comparison+"\n");
             }
         }
