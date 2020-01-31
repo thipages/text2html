@@ -20,7 +20,7 @@ let testSet=(p,o,c)=>[
     `start${p}A${o}Here I am${c} and ${p}B${o}Here I am stuck${c}end`,
     `start<span style="color:red;">Here I am</span> and <span style="color:yellow;">Here I am stuck</span>end`,
     'non nested with keys as html tag',
-    `start${p}em${o}Here I am} and ${p}h1${o}Here I am stuck${c}end`,
+    `start${p}em${o}Here I am${c} and ${p}h1${o}Here I am stuck${c}end`,
     `start<em>Here I am</em> and <h1>Here I am stuck</h1>end`,
     'nested span',
     `start\n${p}A${o}\nHere I am\n${p}B${o}\nembedded\n${c}\n${c}\nend`,
@@ -42,9 +42,9 @@ const log=(i,valid,output)=> {
         console.log(`${i}- nok ${output}`);
     }
 };
-const config=['$','{','}'];
+const config=['$$','{{','}}'];
 const trans=t2h(config);
-const filter=(i)=> i/3<=30;
+const filter=(i)=> true;
 const ts=testSet(...config);
 ts.forEach(
     (v,i)=>{

@@ -21,7 +21,7 @@ const cTagger=(t)=>`</${t}>`;
 const wrapper=(tag,text,attr)=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
 const sc='[\\^$.|?*+()';
 const regExps=(config)=> {
-    const c=config.map(v=>v.split('').map(w=>sc.indexOf(w)>0?'\\'+w:w));
+    const c=config.map(v=>v.split('').map(w=>sc.indexOf(w)>0?'\\'+w:w).join(''));
     return {
         begin: new RegExp('^' + c[0] + '([a-zA-Z][A-Za-z0-9]*)' + c[1] + '$', 'gm'),
         end: new RegExp('^' + c[2] + '$', 'gm'),
@@ -79,7 +79,7 @@ export const t2h=(config)=>(def={})=>(input,transformer={})=> {
                 // store text before wrapping structure, remove linebreaks belonging to the pattern
                 let o = trimNewline(output.substring(index, v.index));
                 if (o!=="") final.push(o);
-                if (v[0] === "}") {
+                if (v[0] === config[2]) {
                     let nItem = buffer.pop();
                     if (!nItem) {
                         warnings.push();
