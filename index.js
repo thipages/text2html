@@ -21,7 +21,7 @@ const cTagger=(t)=>`</${t}>`;
 const wrapper=(tag,text,attr)=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
 const sc='[\\^$.|?*+()';
 const regExps=(config)=> {
-    const c=config.map(v=>sc.indexOf(v)>0?'\\'+v:v);
+    const c=config.map(v=>v.split('').map(w=>sc.indexOf(w)>0?'\\'+w:w));
     return {
         begin: new RegExp('^' + c[0] + '([a-zA-Z][A-Za-z0-9]*)' + c[1] + '$', 'gm'),
         end: new RegExp('^' + c[2] + '$', 'gm'),
@@ -35,7 +35,6 @@ const ul=(a)=> a.join('').split("\n").map(
     v=>wrapper('li',v.replace(/^\s*/,''))
 ).join('')+cTagger('ul');
 export const text2html=(def={})=>(input,transformer={})=> {
-    
     return t2h(['$','{','}'])(def)(input,transformer);
 };
 export const t2h=(config)=>(def={})=>(input,transformer={})=> {

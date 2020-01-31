@@ -33,7 +33,7 @@ let testSet=(p,o,c)=>[
     `<ul><li>item1</li><li>item2   </li></ul>`,
     'self-contained simple',
     `${o}hr${c}`,
-    `<hr />`,
+    `<hr />`
 ];
 const log=(i,valid,output)=> {
     if (valid) {
@@ -42,7 +42,7 @@ const log=(i,valid,output)=> {
         console.log(`${i}- nok ${output}`);
     }
 };
-const config=['$','{{','}'];
+const config=['$','{','}'];
 const trans=t2h(config);
 const filter=(i)=> i/3<=30;
 const ts=testSet(...config);
