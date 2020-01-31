@@ -15,23 +15,32 @@ const htmlMap=(o)=> {
     }
     return map;
 };
-const PREFIX1="$";
-const OPENING='\\';
-const CLOSING='\\';
 const voidTagger=(t,a)=>`<${t}${a?' '+a:''} />`;
 const oTagger=(t,a)=>`<${t}${a?' '+a:''}>`;
 const cTagger=(t)=>`</${t}>`;
 const wrapper=(tag,text,attr)=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
-const begin=/^\\([a-zA-Z][A-Za-z0-9]*){$/gm;
-const end=/^}$/gm;
-const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){(.+?)}/g;
+const sc='[\\^$.|?*+()';
+const regExps=(config)=> {
+    const c=config.map(v=>sc.indexOf(v)>0?'\\'+v:v);
+    return {
+        begin: new RegExp('^' + c[0] + '([a-zA-Z][A-Za-z0-9]*)' + c[1] + '$', 'gm'),
+        end: new RegExp('^' + c[2] + '$', 'gm'),
+        nonNested: new RegExp(c[0] + '([a-zA-Z][a-zA-Z0-9]*)' + c[1] + '(.+?)' + c[2], 'g'),
+        auto: new RegExp('^' + c[1] + '([a-z][a-z]+)' + c[2] + '$', 'gm')
+    };
+};
 const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
 const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
 const ul=(a)=> a.join('').split("\n").map(
     v=>wrapper('li',v.replace(/^\s*/,''))
 ).join('')+cTagger('ul');
 export const text2html=(def={})=>(input,transformer={})=> {
+    
+    return t2h(['$','{','}'])(def)(input,transformer);
+};
+export const t2h=(config)=>(def={})=>(input,transformer={})=> {
     let map=htmlMap(def),warnings=[];
+    let re=regExps(config);
     defaultTags.forEach (t=>{
         if (!map.has(t)) map.set(t,{tag:t,attr:""});
     });
@@ -42,7 +51,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
         // remove first/last lines break
         .replace(/^\n|\n$/g,'')
         // resolve non nested pattern
-        .replace (nonNested,function (all,key,text) {
+        .replace (re.nonNested,function (all,key,text) {
             if (map.has(key)) {
                 let t=map.get(key);
                 return  wrapper(t.tag,text,t.attr);
@@ -50,7 +59,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
                 warnings.push();
                 return wrapper('unknown',text);
             }
-        }).replace(/^\\([a-z][a-z]+)\\$/gm,function($,key) {
+        }).replace(re.auto,function($,key) {
             if (map.has(key)) {
                 let t=map.get(key);
                 return  voidTagger(t.tag,t.attr);
@@ -62,7 +71,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
         });
     // resolve nested pattern
     let final=[], buffer=[],index=0;
-    const nested=[...Array.from(output.matchAll(begin)), ...Array.from(output.matchAll(end))]
+    const nested=[...Array.from(output.matchAll(re.begin)), ...Array.from(output.matchAll(re.end))]
         .sort((a,b)=>a.index===b.index?0:a.index<b.index?-1:1);
     //console.log(nested);
     if (nested.length!==0) {
