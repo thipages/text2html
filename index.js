@@ -31,19 +31,18 @@ const regExps=(config)=> {
 };
 const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
 const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
-const ul=(a)=> a.join('').split("\n").map(
+export const trans_ul=(a)=> a.join('').split("\n").map(
     v=>wrapper('li',v.replace(/^\s*/,''))
 ).join('')+cTagger('ul');
-export const text2html=(def={})=>(input,transformer={})=> {
+export const text2html=(def={},transformer={})=>(input)=> {
     return t2h(['$','{','}'])(def)(input,transformer);
 };
-export const t2h=(config)=>(def={})=>(input,transformer={})=> {
+export const t2h=(config,transformer={})=>(def={})=>(input)=> {
     let map=htmlMap(def),warnings=[];
     let re=regExps(config);
     defaultTags.forEach (t=>{
         if (!map.has(t)) map.set(t,{tag:t,attr:""});
     });
-    if (!transformer['ul']) transformer.ul=ul;
     let output=input
         // normalize line breaks
         .replace(/[\r\n]+/g,'\n')

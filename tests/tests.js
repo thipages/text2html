@@ -1,4 +1,4 @@
-import {t2h, text2html} from "../index.js";
+import {t2h, text2html, trans_ul} from "../index.js";
 /*const samp=fetch ("asFile")
     .then(response => response.text()
     .then(data => {
@@ -43,7 +43,7 @@ const log=(i,valid,output)=> {
     }
 };
 const config=['$$','{{','}}'];
-const trans=t2h(config);
+const trans=t2h(config, {ul:trans_ul});
 const filter=(i)=> true;
 const ts=testSet(...config);
 ts.forEach(
