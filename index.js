@@ -29,7 +29,7 @@ const regExps=(config)=> {
         auto: new RegExp('^' + c[1] + '([a-z][a-z]+)' + c[2] + '$', 'gm')
     };
 };
-const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
+const trimNewline=(s)=>s.replace(/^[\r\n]|[\r\n]$/g,'');
 const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
 export const trans_ul=(a)=> a.join('').split("\n").map(
     v=>wrapper('li',v.replace(/^\s*/,''))
