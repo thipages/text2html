@@ -15,13 +15,16 @@ const htmlMap=(o)=> {
     }
     return map;
 };
+const PREFIX1="$";
+const OPENING='\\';
+const CLOSING='\\';
 const voidTagger=(t,a)=>`<${t}${a?' '+a:''} />`;
 const oTagger=(t,a)=>`<${t}${a?' '+a:''}>`;
 const cTagger=(t)=>`</${t}>`;
 const wrapper=(tag,text,attr)=>`${oTagger(tag,attr)}${text}${cTagger(tag)}`;
-const begin=/^\\\\([a-zA-Z][A-Za-z0-9]*)$/gm;
-const end=/^\\\\$/gm;
-const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){([^\\]*)}/g;
+const begin=/^\\([a-zA-Z][A-Za-z0-9]*){$/gm;
+const end=/^}$/gm;
+const nonNested=/\\([a-zA-Z][a-zA-Z0-9]*){(.+?)}/g;
 const trimNewline=(s)=>s.replace(/^[\r\n|\r|\n]|[\r\n|\r|\n]$/g,'');
 const defaultTags=['ul','i','strong','b','em','code','pre','blockquote','h1','h2','h3','h4','h5','h6'];
 const ul=(a)=> a.join('').split("\n").map(
@@ -35,12 +38,11 @@ export const text2html=(def={})=>(input,transformer={})=> {
     if (!transformer['ul']) transformer.ul=ul;
     let output=input
         // normalize line breaks
-        .replace(/[\r\n|\r]+/g,'\n')
-        // remove last line break
+        .replace(/[\r\n]+/g,'\n')
+        // remove first/last lines break
         .replace(/^\n|\n$/g,'')
         // resolve non nested pattern
         .replace (nonNested,function (all,key,text) {
-            //console.log("---",all,key,text)
             if (map.has(key)) {
                 let t=map.get(key);
                 return  wrapper(t.tag,text,t.attr);
@@ -48,7 +50,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
                 warnings.push();
                 return wrapper('unknown',text);
             }
-        }).replace(/^\\([a-z][a-z]+)\/$/gm,function($,key) {
+        }).replace(/^\\([a-z][a-z]+)\\$/gm,function($,key) {
             if (map.has(key)) {
                 let t=map.get(key);
                 return  voidTagger(t.tag,t.attr);
@@ -62,13 +64,14 @@ export const text2html=(def={})=>(input,transformer={})=> {
     let final=[], buffer=[],index=0;
     const nested=[...Array.from(output.matchAll(begin)), ...Array.from(output.matchAll(end))]
         .sort((a,b)=>a.index===b.index?0:a.index<b.index?-1:1);
+    //console.log(nested);
     if (nested.length!==0) {
         nested.forEach(
             v => {
                 // store text before wrapping structure, remove linebreaks belonging to the pattern
                 let o = trimNewline(output.substring(index, v.index));
                 if (o!=="") final.push(o);
-                if (v[0] === '\\\\') {
+                if (v[0] === "}") {
                     let nItem = buffer.pop();
                     if (!nItem) {
                         warnings.push();
@@ -82,7 +85,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
                     } else {
                         warnings.push();
                     }
-                } else  {
+                } else {
                     if (map.has(v[1])) {
                         let t=map.get(v[1]);
                         final.push(oTagger(t.tag,t.attr));
@@ -90,7 +93,7 @@ export const text2html=(def={})=>(input,transformer={})=> {
                         final.push(oTagger("unknown"));
                         warnings.push();
                     }
-                    buffer.push([final.length - 1, v[1]]);
+                    buffer.push([final.length-1, v[1]]);
                 }
                 index = v[0].length + v.index;
             }
